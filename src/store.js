@@ -4,20 +4,22 @@ import { reduxFirestore, firestoreReducer  } from 'redux-firestore'
 import firebase from 'firebase/app'
 import 'firebase/firestore'; 
 
+import { API_ID, API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGIN_SENDER } from './keys';
+
 // Ver documentación en react-redux-firestore
 
 // configurar firebase
 // se traen estos datos del sitio de firebase
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBpqIfqqfiokPEPAt0BJ2WVQWIi3-c1Wg4",
-    authDomain: "bibliotorre-b0a80.firebaseapp.com",
-    databaseURL: "https://bibliotorre-b0a80.firebaseio.com",
-    projectId: "bibliotorre-b0a80",
-    storageBucket: "bibliotorre-b0a80.appspot.com",
-    messagingSenderId: "306261184986",
-    appId: "1:306261184986:web:522f9736f7dea8ae"
-}
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGIN_SENDER,
+  appId: API_ID
+};
 
 firebase.initializeApp(firebaseConfig);
 
