@@ -105,7 +105,7 @@ const NuevoSuscriptor = ({ firestore, history }) => {
 }
 
 NuevoSuscriptor.propTypes = {
-    firestory: PropTypes.object.isRequired
+    firestore: PropTypes.object.isRequired
 }
 
 export default firestoreConnect()(NuevoSuscriptor);
