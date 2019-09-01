@@ -58,7 +58,7 @@ const Libros = ({firestore, libros, history}) => {
                             <td>{libro.existencia - libro.prestados.length }</td>
                             <td>
                                 <Link
-                                    to={`/libro/mostrar/${libro.id}`}
+                                    to={`/libros/mostrar/${libro.id}`}
                                     className="btn btn-success btn-block"
                                 >
                                     <i className="fas fa-angle-double-right"></i> {' '}
