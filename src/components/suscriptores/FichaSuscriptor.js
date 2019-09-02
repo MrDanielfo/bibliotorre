@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const FichaSuscriptor = ({ alumno }) => {
     return (
-        <div className="card my-3">
+        <div className="card my-5">
             <h3 className="card-header bg-primary text-white">Datos del solicitante</h3>
 
             <div className="card-body">

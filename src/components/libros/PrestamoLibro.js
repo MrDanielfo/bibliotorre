@@ -25,11 +25,28 @@ const PrestamoLibro = ({libro, firestore, history }) => {
     let fichaAlumno;
     let btnSolicitar;
 
+    const solicitarPrestamo = () => {
+        const suscriptor = resultado;
+        
+        suscriptor.fecha_solicitud = new Date().toLocaleDateString();
+
+        const libroActualizado = libro
+
+        libroActualizado.prestados.push(suscriptor);
+
+        firestore.update({
+            collection: 'libros',
+            doc: libro.id
+        }, libroActualizado)
+                .then(() => history.push('/'));
+    }
+
     if(resultado.nombre) {
         fichaAlumno =  <FichaSuscriptor alumno={resultado} />
         btnSolicitar = <button 
                             type="button"
                             className="btn btn-dark btn-block"
+                            onClick={solicitarPrestamo}
                         >
                         Solicitar Préstamo
                        </button>
@@ -84,7 +101,7 @@ const PrestamoLibro = ({libro, firestore, history }) => {
                     </strong>
                 </h2>
                 <div className="row justify-content-center">
-                    <div className="col-md-8 my-3">
+                    <div className="col-md-8 my-5">
                         <form
                             onSubmit={buscarAlumno}
                             className="mb-3"

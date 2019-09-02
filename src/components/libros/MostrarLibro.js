@@ -7,7 +7,7 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
 
-const MostrarLibro = ({ libro }) => {
+const MostrarLibro = ({ libro, firestore }) => {
 
     if (!libro || libro === undefined) return <Spinner />;
 
@@ -22,6 +22,18 @@ const MostrarLibro = ({ libro }) => {
                       </Link>
     } else {
         btnPrestamo = null;
+    }
+
+    const devolverLibro = (codigo) => {
+        const libroActualizado = {...libro};
+        const prestados = libroActualizado.prestados.filter(alumno => alumno.codigo !== codigo);
+        libroActualizado.prestados = prestados;
+
+        firestore.update({
+            collection: 'libros',
+            doc: libro.id
+        }, libroActualizado);
+
     }
 
     return (
@@ -66,6 +78,41 @@ const MostrarLibro = ({ libro }) => {
                 </p>
 
                 {btnPrestamo}
+
+                <h3 className="mb-4">Personas que han tomado un ejemplar del libro</h3>
+
+                {libro.prestados.map((alumno, index) => (
+                    <div key={index} className="card my-2">
+                        <h4 className="card-header">
+                            {alumno.nombre} {alumno.apellido}
+                        </h4>
+                        <div className="card-body">
+                            <p>
+                                <span className="font-weight-bold">Código: </span> {''}
+                                {alumno.codigo}
+                            </p>
+
+                            <p>
+                                <span className="font-weight-bold">Carrera: </span> {''}
+                                {alumno.carrera}
+                            </p>
+
+                            <p>
+                                <span className="font-weight-bold">Fecha de inicio de préstamo: </span> {''}
+                                {alumno.fecha_solicitud}
+                            </p>
+                            <div className="card-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-success font-weight-bold"
+                                    onClick={() => devolverLibro(alumno.codigo)}
+                                >
+                                    Realizar devolución
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
                 
             </div>
 
@@ -75,7 +122,7 @@ const MostrarLibro = ({ libro }) => {
 }
 
 MostrarLibro.propTypes = {
-    libro: PropTypes.object.isRequired
+    firestore: PropTypes.object.isRequired
 }
 
 export default compose(
