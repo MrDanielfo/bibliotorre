@@ -34,7 +34,7 @@ const Libros = ({firestore, libros, history}) => {
             </div>
             <div className="col-md-8">
                 <h2>
-                    <i className="fas fa-users"></i> Libros
+                    <i className="fas fa-book"></i> Libros
                 </h2>
             </div>
             <table className="table table-striped mt-4">

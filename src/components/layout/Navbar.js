@@ -8,7 +8,7 @@ const Navbar = () => {
 
                 <nav className="navbar navbar-light">
                     <span className="navbar-brand mb-0 h1">
-                        Administrador de Tareas
+                        Administrador de Libros
                     </span>
                 </nav>
 
