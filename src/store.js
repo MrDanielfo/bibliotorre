@@ -1,7 +1,8 @@
 import { createStore, combineReducers, compose } from 'redux'; 
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 import { reduxFirestore, firestoreReducer  } from 'redux-firestore'
-import firebase from 'firebase/app'
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore'; 
 
 import { API_ID, API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGIN_SENDER } from './keys';
