@@ -12,6 +12,11 @@ import { API_ID, API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET,
 // configurar firebase
 // se traen estos datos del sitio de firebase
 
+/* Custom reducers */
+
+import suscriptorReducer from './reducers/suscriptorReducer';
+
+
 const firebaseConfig = {
   apiKey: API_KEY,
   authDomain: AUTH_DOMAIN,
@@ -39,7 +44,8 @@ const createStoreWithFirebase = compose(
 // Reducers
 const rootReducer = combineReducers({
     firebase: firebaseReducer,
-    firestore: firestoreReducer
+    firestore: firestoreReducer,
+    usuario: suscriptorReducer
 });
 
 // state inicial

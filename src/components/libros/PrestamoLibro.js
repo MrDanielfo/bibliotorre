@@ -8,17 +8,20 @@ import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
 import FichaSuscriptor from '../suscriptores/FichaSuscriptor';
 
-const PrestamoLibro = ({libro, firestore, history }) => {
+// redux
+
+import {  buscarUsuario } from '../../actions/suscriptorActions';
+
+const PrestamoLibro = ({libro, firestore, history, usuario, buscarUsuario }) => {
 
     const initialState = {
         busqueda: '',
-        resultado: {},
         noResultado: false
     }
 
     const [searchData, setSearchData ] = useState(initialState)
 
-    const { busqueda, resultado, noResultado } = searchData
+    const { busqueda, noResultado } = searchData
 
     const onChange = (e) => setSearchData({ ...searchData, [e.target.name]: e.target.value });
 
@@ -26,23 +29,27 @@ const PrestamoLibro = ({libro, firestore, history }) => {
     let btnSolicitar;
 
     const solicitarPrestamo = () => {
-        const suscriptor = resultado;
-        
-        suscriptor.fecha_solicitud = new Date().toLocaleDateString();
+        const suscriptor = usuario;
+        // no se pueden mutar los props
+    
+         suscriptor.fecha_solicitud = new Date().toLocaleDateString();
 
-        const libroActualizado = libro
+         let prestados = [...libro.prestados, suscriptor];
 
-        libroActualizado.prestados.push(suscriptor);
+         const libroActualizado = {...libro}
+         delete libroActualizado.prestados;
 
-        firestore.update({
-            collection: 'libros',
-            doc: libro.id
-        }, libroActualizado)
-                .then(() => history.push('/'));
+         libroActualizado.prestados = prestados;
+
+         firestore.update({
+             collection: 'libros',
+             doc: libro.id
+         }, libroActualizado)
+                 .then(() => history.push('/'));
     }
 
-    if(resultado.nombre) {
-        fichaAlumno =  <FichaSuscriptor alumno={resultado} />
+    if(usuario.nombre) {
+        fichaAlumno =  <FichaSuscriptor alumno={usuario} />
         btnSolicitar = <button 
                             type="button"
                             className="btn btn-dark btn-block"
@@ -55,6 +62,15 @@ const PrestamoLibro = ({libro, firestore, history }) => {
         btnSolicitar = null;
     }
 
+    // Mostrar mensaje de error
+    let mensajeResultado = '';
+    if(noResultado) {
+        mensajeResultado =  <div className="alert alert-danger text-center font-weight-bold">
+                                No hay resultados
+                            </div>
+    } else {
+        mensajeResultado = null;
+    }
 
     const buscarAlumno = e => {
        e.preventDefault();
@@ -64,16 +80,17 @@ const PrestamoLibro = ({libro, firestore, history }) => {
 
         consulta.then(user => {
             if(user.empty) {
+                buscarUsuario({})
+
                 setSearchData({
-                    ...searchData,
-                    resultado: { },
-                    noResultado: true
-                })
+                ...searchData,
+                noResultado: true
+                });
             } else {
                 const datos = user.docs[0];
+                buscarUsuario(datos.data());
                 setSearchData({
                     ...searchData, 
-                    resultado: datos.data(),
                     noResultado: false
                 })
                 
@@ -122,6 +139,9 @@ const PrestamoLibro = ({libro, firestore, history }) => {
 
                         {fichaAlumno}
                         {btnSolicitar}
+
+                        {mensajeResultado}
+
                     </div>
                 </div>
             </div>
@@ -131,7 +151,9 @@ const PrestamoLibro = ({libro, firestore, history }) => {
 }
 
 PrestamoLibro.propTypes = {
-    firestore: PropTypes.object.isRequired
+    firestore: PropTypes.object.isRequired,
+    buscarUsuario: PropTypes.func.isRequired,
+    usuario: PropTypes.object.isRequired
 }
 
 export default compose(
@@ -142,7 +164,8 @@ export default compose(
             doc: match.params.id
         }
     ]),
-    connect(({ firestore: { ordered } }) => ({
-        libro: ordered.libro && ordered.libro[0]
-    }))
+    connect(({ firestore: { ordered }, usuario }) => ({
+        libro: ordered.libro && ordered.libro[0],
+        usuario: usuario
+    }), { buscarUsuario })
 )(PrestamoLibro); 
